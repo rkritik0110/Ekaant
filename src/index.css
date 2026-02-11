@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ekaant - The Silentium Design System
+   A minimal, focus-first aesthetic inspired by deep work environments
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Premium warm palette - soft off-white with depth */
+    --background: 60 8% 97%;
+    --foreground: 0 0% 10%;
+
+    /* Warm greige for cards and sections */
+    --card: 43 18% 93%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 60 8% 97%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Premium warm gold accent as primary */
+    --primary: 38 47% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Warm greige secondary */
+    --secondary: 40 14% 90%;
+    --secondary-foreground: 0 0% 20%;
+
+    --muted: 40 12% 88%;
+    --muted-foreground: 0 0% 40%;
+
+    /* Soft warm accent for hover states */
+    --accent: 40 16% 92%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 12% 85%;
+    --input: 40 14% 90%;
+    --ring: 38 47% 59%;
+
+    --radius: 0.75rem;
+
+    /* Cabin status colors */
+    --cabin-available: 145 60% 42%;
+    --cabin-occupied: 0 70% 55%;
+    --cabin-hold: 45 90% 50%;
+
+    /* Success and info */
+    --success: 145 60% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 90% 50%;
+    --warning-foreground: 30 10% 10%;
+    --info: 210 70% 50%;
+    --info-foreground: 0 0% 100%;
+
+    /* Section alternating background */
+    --section-alt: 43 18% 93%;
+
+    /* Sidebar */
+    --sidebar-background: 43 18% 93%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 38 47% 59%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 14% 90%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 40 12% 85%;
+    --sidebar-ring: 38 47% 59%;
+
+    /* Shadows for premium depth */
+    --shadow-color: 40 10% 50%;
+  }
+
+  .dark {
+    /* Deep, warm dark mode - cozy library at night */
+    --background: 30 15% 8%;
+    --foreground: 35 15% 92%;
+
+    --card: 30 12% 12%;
+    --card-foreground: 35 15% 92%;
+
+    --popover: 30 12% 10%;
+    --popover-foreground: 35 15% 92%;
+
+    /* Warm cream primary for dark mode */
+    --primary: 35 20% 90%;
+    --primary-foreground: 30 15% 8%;
+
+    --secondary: 30 10% 18%;
+    --secondary-foreground: 35 15% 88%;
+
+    --muted: 30 10% 20%;
+    --muted-foreground: 35 10% 55%;
+
+    --accent: 30 12% 22%;
+    --accent-foreground: 35 15% 90%;
+
+    --destructive: 0 60% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 10% 20%;
+    --input: 30 10% 20%;
+    --ring: 35 15% 75%;
+
+    /* Cabin status colors - slightly muted for dark mode */
+    --cabin-available: 145 55% 38%;
+    --cabin-occupied: 0 65% 48%;
+    --cabin-hold: 45 85% 45%;
+
+    /* Success and info */
+    --success: 145 55% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 85% 45%;
+    --warning-foreground: 30 10% 10%;
+    --info: 210 65% 45%;
+    --info-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar-background: 30 12% 10%;
+    --sidebar-foreground: 35 15% 85%;
+    --sidebar-primary: 35 20% 90%;
+    --sidebar-primary-foreground: 30 15% 8%;
+    --sidebar-accent: 30 10% 18%;
+    --sidebar-accent-foreground: 35 15% 88%;
+    --sidebar-border: 30 10% 18%;
+    --sidebar-ring: 35 15% 75%;
+
+    --section-alt: 30 12% 12%;
+    --shadow-color: 0 0% 0%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Focus-first typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* Smooth transitions for theme switching */
+  .theme-transition {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+  /* Cabin status utilities */
+  .cabin-available {
+    background-color: hsl(var(--cabin-available));
+  }
+  
+  .cabin-occupied {
+    background-color: hsl(var(--cabin-occupied));
+  }
+  
+  .cabin-hold {
+    background-color: hsl(var(--cabin-hold));
+  }
+
+  /* Glass effect for cards */
+  .glass {
+    @apply backdrop-blur-sm bg-card/80;
+  }
+
+  /* Subtle hover lift */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-0.5;
+  }
+
+  /* Focus ring for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Glassmorphism utilities */
+@layer utilities {
+  .glass-card {
+    @apply backdrop-blur-md bg-card/70 border border-border/50;
+  }
+  
+  .glass-card-subtle {
+    @apply backdrop-blur-sm bg-card/50 border border-border/30;
+  }
+  
+  /* Hero overlay that works in both themes */
+  .hero-overlay-light {
+    background: linear-gradient(
+      to right,
+      hsl(60 8% 97% / 0.98) 0%,
+      hsl(60 8% 97% / 0.92) 25%,
+      hsl(60 8% 97% / 0.75) 50%,
+      hsl(60 8% 97% / 0.3) 100%
+    );
+  }
+  
+  .hero-overlay-dark {
+    background: linear-gradient(
+      to right,
+      hsl(30 15% 8% / 0.95) 0%,
+      hsl(30 15% 8% / 0.85) 30%,
+      hsl(30 15% 8% / 0.6) 60%,
+      hsl(30 15% 8% / 0.2) 100%
+    );
+  }
+  
+  /* Cabin status glow effects */
+  .cabin-glow-available {
+    box-shadow: 0 0 20px hsl(var(--cabin-available) / 0.3);
+  }
+  
+  .cabin-glow-occupied {
+    box-shadow: 0 0 20px hsl(var(--cabin-occupied) / 0.3);
+  }
+  
+  .cabin-glow-hold {
+    box-shadow: 0 0 20px hsl(var(--cabin-hold) / 0.3);
+  }
+  
+  /* Button press effect */
+  .btn-press {
+    @apply active:scale-95 transition-transform duration-100;
+  }
+
+  /* Premium card shadows */
+  .shadow-premium {
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.05);
+  }
+
+  .shadow-premium-hover {
+    box-shadow: 0 8px 24px hsl(var(--shadow-color) / 0.08);
+  }
+
+  /* Section alternating background */
+  .bg-section-alt {
+    background-color: hsl(var(--section-alt));
+  }
+
+  /* Premium text colors for light theme */
+  .text-heading {
+    @apply text-foreground font-semibold;
+  }
+
+  .text-body {
+    color: hsl(0 0% 20%);
+  }
+}
+
+/* Shimmer animation for locker card */
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+/* Pulse ring animation for timer */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px hsl(var(--success) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
