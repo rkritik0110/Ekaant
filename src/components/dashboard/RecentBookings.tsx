@@ -25,6 +25,27 @@ const slotLabels: Record<string, string> = {
 
 export function RecentBookings({ bookings }: RecentBookingsProps) {
   const recentBookings = bookings.slice(0, 5);
+  const now = new Date();
+
+  // Helper to determine display status
+  const getDisplayStatus = (booking: Booking) => {
+    if (booking.status !== "confirmed") return booking.status;
+
+    // Check if booking is expired
+    const dateStr = booking.booking_date; // YYYY-MM-DD
+    // Handle time format (HH:MM:SS or HH:MM)
+    const timeParts = booking.end_time.split(":");
+    const hours = parseInt(timeParts[0]);
+    const minutes = parseInt(timeParts[1]);
+
+    const endDateTime = new Date(dateStr);
+    endDateTime.setHours(hours, minutes, 0, 0);
+
+    if (endDateTime < now) {
+      return "completed";
+    }
+    return "confirmed";
+  };
 
   if (recentBookings.length === 0) {
     return (
@@ -57,40 +78,43 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {recentBookings.map((booking) => (
-            <div
-              key={booking.id}
-              className="flex flex-col gap-3 rounded-lg border border-border/50 p-3 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted font-semibold">
-                  #{booking.cabin?.cabin_number}
+          {recentBookings.map((booking) => {
+            const displayStatus = getDisplayStatus(booking);
+            return (
+              <div
+                key={booking.id}
+                className="flex flex-col gap-3 rounded-lg border border-border/50 p-3 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted font-semibold">
+                    #{booking.cabin?.cabin_number}
+                  </div>
+                  <div>
+                    <p className="font-medium">
+                      {format(new Date(booking.booking_date), "MMM d, yyyy")}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {booking.start_time} - {booking.end_time}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">
-                    {format(new Date(booking.booking_date), "MMM d, yyyy")}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {booking.start_time} - {booking.end_time}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {(booking as any).has_locker && (
-                  <Badge variant="outline" className="border-[hsl(38,47%,59%)] text-[hsl(38,60%,65%)] text-xs">
-                    <Lock className="mr-1 h-3 w-3" />
-                    Locker
+                <div className="flex flex-wrap items-center gap-2">
+                  {(booking as any).has_locker && (
+                    <Badge variant="outline" className="border-[hsl(38,47%,59%)] text-[hsl(38,60%,65%)] text-xs">
+                      <Lock className="mr-1 h-3 w-3" />
+                      Locker
+                    </Badge>
+                  )}
+                  <Badge variant="outline" className="text-xs">
+                    {slotLabels[booking.slot_type]}
                   </Badge>
-                )}
-                <Badge variant="outline" className="text-xs">
-                  {slotLabels[booking.slot_type]}
-                </Badge>
-                <Badge className={statusStyles[booking.status]}>
-                  {booking.status}
-                </Badge>
+                  <Badge className={statusStyles[displayStatus as BookingStatus]}>
+                    {displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
+                  </Badge>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>

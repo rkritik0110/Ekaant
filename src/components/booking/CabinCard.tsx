@@ -16,21 +16,13 @@ interface CabinCardProps {
   bookedSlots?: BookedSlot[];
 }
 
-// Check if cabin is fully booked for the day (all 4 batches = 16 hours)
+// Check if cabin is fully booked for the day
+// A full day is 16 hours (6am-10pm, covering all 4 batches)
 function isFullDayBooked(slots: BookedSlot[]): boolean {
-  const totalHours = slots.reduce((sum, slot) => {
-    const start = parseInt(slot.startTime.split(":")[0]);
-    const end = parseInt(slot.endTime.split(":")[0]);
-    return sum + (end - start);
-  }, 0);
-  return totalHours >= 16;
-}
+  if (slots.length === 0) return false;
 
-// Get available time slots
-function getAvailableSlots(slots: BookedSlot[]): string[] {
-  const allHours = Array.from({ length: 17 }, (_, i) => i + 6);
+  // Count the actual unique hours that are booked
   const bookedHours = new Set<number>();
-  
   slots.forEach((slot) => {
     const start = parseInt(slot.startTime.split(":")[0]);
     const end = parseInt(slot.endTime.split(":")[0]);
@@ -38,10 +30,27 @@ function getAvailableSlots(slots: BookedSlot[]): string[] {
       bookedHours.add(h);
     }
   });
-  
+
+  // A full day booking covers at least 16 hours (all 4 batches from 6am-10pm)
+  return bookedHours.size >= 16;
+}
+
+// Get available time slots
+function getAvailableSlots(slots: BookedSlot[]): string[] {
+  const allHours = Array.from({ length: 17 }, (_, i) => i + 6);
+  const bookedHours = new Set<number>();
+
+  slots.forEach((slot) => {
+    const start = parseInt(slot.startTime.split(":")[0]);
+    const end = parseInt(slot.endTime.split(":")[0]);
+    for (let h = start; h < end; h++) {
+      bookedHours.add(h);
+    }
+  });
+
   const available: string[] = [];
   let rangeStart: number | null = null;
-  
+
   allHours.forEach((hour, idx) => {
     if (!bookedHours.has(hour)) {
       if (rangeStart === null) rangeStart = hour;
@@ -53,7 +62,7 @@ function getAvailableSlots(slots: BookedSlot[]): string[] {
       available.push(`${rangeStart}:00-22:00`);
     }
   });
-  
+
   return available;
 }
 
@@ -61,12 +70,12 @@ export function CabinCard({ cabin, isSelected, onSelect, bookedSlots = [] }: Cab
   const { user } = useAuth();
   const cardRef = useRef<HTMLButtonElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  
+
   const isHeldByUser = cabin.held_by === user?.id;
   const hasBookings = bookedSlots.length > 0;
   const isFullDay = isFullDayBooked(bookedSlots);
   const availableSlots = getAvailableSlots(bookedSlots);
-  
+
   let displayStatus: "available" | "partial" | "occupied" | "on_hold" = "available";
   if (cabin.status === "on_hold" && !isHeldByUser) {
     displayStatus = "on_hold";
@@ -75,7 +84,7 @@ export function CabinCard({ cabin, isSelected, onSelect, bookedSlots = [] }: Cab
   } else if (hasBookings) {
     displayStatus = "partial";
   }
-  
+
   const statusConfig = {
     available: {
       label: "Available",
@@ -94,7 +103,7 @@ export function CabinCard({ cabin, isSelected, onSelect, bookedSlots = [] }: Cab
       className: "bg-cabin-hold cursor-not-allowed",
     },
   };
-  
+
   const config = statusConfig[displayStatus];
   const canSelect = displayStatus !== "occupied" && (displayStatus !== "on_hold" || isHeldByUser);
 
