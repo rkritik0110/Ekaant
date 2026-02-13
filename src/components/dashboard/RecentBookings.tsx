@@ -60,7 +60,7 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
           {recentBookings.map((booking) => (
             <div
               key={booking.id}
-              className="flex items-center justify-between rounded-lg border border-border/50 p-3"
+              className="flex flex-col gap-3 rounded-lg border border-border/50 p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted font-semibold">
@@ -75,7 +75,7 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {(booking as any).has_locker && (
                   <Badge variant="outline" className="border-[hsl(38,47%,59%)] text-[hsl(38,60%,65%)] text-xs">
                     <Lock className="mr-1 h-3 w-3" />
